@@ -1,9 +1,3 @@
-// Create Function Gameboard
-// Create variables rows = 3, columns = 3, board = []
-// create a 2d array by creating an inner loop and an outer loop
-// each outer loop should set board[i] = []
-// each inner loop push a cell with a value
-
 function Gameboard() {
   const rows = 3;
   const columns = 3;
@@ -24,14 +18,21 @@ function Gameboard() {
     console.log(row);
     console.log(column);
 
-    const availableSquare = board[row][column].getValue() == null;
+    const success = board[row][column].addMarker(player);
 
-    if (!availableSquare) {
-      console.log("square taken");
-      return;
+    if (!success) {
+      console.log("Square taken!");
+      return false;
     }
+    return true;
+  };
 
-    board[row][column].addMarker(player);
+  const resetBoard = () => {
+    for (const row of board) {
+      for (const square of row) {
+        square.resetValue();
+      }
+    }
   };
 
   //For testing in the console
@@ -43,21 +44,28 @@ function Gameboard() {
     console.log(boardWithSquareValues);
   };
 
-  return { getBoard, placeMarker, printBoard };
+  return { getBoard, placeMarker, printBoard, resetBoard };
 }
 
 function Square() {
   let value = null;
 
   const addMarker = (player) => {
+    if (value !== null) return false;
     value = player;
+    return true;
   };
 
   const getValue = () => value;
 
+  const resetValue = () => {
+    value = null;
+  };
+
   return {
     getValue,
     addMarker,
+    resetValue,
   };
 }
 
@@ -96,7 +104,10 @@ function GameController() {
         return true;
       }
     }
+    return false;
   };
+
+  //TODO: Add CheckforTie()
 
   const announceWinner = () => {
     console.log(`Player ${currentPlayer} wins!`);
@@ -107,10 +118,12 @@ function GameController() {
   };
 
   const playRound = (index) => {
-    game.placeMarker(index, currentPlayer);
+    const success = game.placeMarker(index, currentPlayer);
+    if (!success) return;
 
     if (checkIfWin()) {
       announceWinner();
+      game.resetBoard();
     } else {
       switchPlayerTurn();
     }
