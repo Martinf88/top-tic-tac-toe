@@ -173,6 +173,7 @@ function ScreenController() {
   const game = GameController();
   const playerTurnDiv = document.querySelector(".turn");
   const boardDiv = document.querySelector(".board");
+  const newGameButton = document.querySelector(".new-game");
 
   const updateScreen = () => {
     boardDiv.textContent = "";
@@ -215,6 +216,11 @@ function ScreenController() {
     const index = Number(clickedSquare.dataset.index);
 
     game.playRound(index);
+    updateScreen();
+  });
+
+  newGameButton.addEventListener("click", () => {
+    game.startNewGame();
     updateScreen();
   });
 
