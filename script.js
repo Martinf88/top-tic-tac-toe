@@ -17,19 +17,61 @@ function Gameboard() {
       board[i].push(Square());
     }
   }
-  console.log(board);
 
-  return { getBoard };
+  const placeMarker = (index, player) => {
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    console.log(row);
+    console.log(column);
+
+    const availableSquare = board[row][column].getValue() == null;
+
+    if (!availableSquare) {
+      console.log("square taken");
+      return;
+    }
+
+    board[row][column].addMarker(player);
+  };
+
+  //For testing in the console
+  const printBoard = () => {
+    const boardWithSquareValues = board.map((row) =>
+      row.map((col) => col.getValue()),
+    );
+
+    console.log(boardWithSquareValues);
+  };
+
+  return { getBoard, placeMarker, printBoard };
 }
 
 function Square() {
   let value = null;
 
+  const addMarker = (player) => {
+    value = player;
+  };
+
   const getValue = () => value;
 
   return {
     getValue,
+    addMarker,
   };
 }
 
-Gameboard();
+function GameController() {
+  const game = Gameboard();
+  let currentPlayer = "X";
+
+  const playRound = (index) => {
+    game.placeMarker(index, currentPlayer);
+
+    game.printBoard();
+  };
+
+  return { playRound };
+}
+
+const game = GameController();
