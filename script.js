@@ -63,12 +63,20 @@ function Square() {
 
 function GameController() {
   const game = Gameboard();
-  let currentPlayer = "X";
+
+  const players = ["X", "O"];
+  let currentPlayer = players[0];
+
+  const switchPlayerTurn = () => {
+    currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+  };
 
   const playRound = (index) => {
     game.placeMarker(index, currentPlayer);
 
     game.printBoard();
+
+    switchPlayerTurn();
   };
 
   return { playRound };
