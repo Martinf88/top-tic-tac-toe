@@ -63,9 +63,44 @@ function Square() {
 
 function GameController() {
   const game = Gameboard();
+  const board = game.getBoard();
 
   const players = ["X", "O"];
   let currentPlayer = players[0];
+
+  const checkIfWin = () => {
+    const winningLines = [
+      //Rows
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      //Columns
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      //Diagonals
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    const boardValues = board.flat().map((square) => square.getValue());
+
+    for (const line of winningLines) {
+      const [a, b, c] = line;
+
+      if (
+        boardValues[a] === boardValues[b] &&
+        boardValues[b] === boardValues[c] &&
+        boardValues[a] !== null
+      ) {
+        return true;
+      }
+    }
+  };
+
+  const announceWinner = () => {
+    console.log(`Player ${currentPlayer} wins!`);
+  };
 
   const switchPlayerTurn = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -74,9 +109,13 @@ function GameController() {
   const playRound = (index) => {
     game.placeMarker(index, currentPlayer);
 
-    game.printBoard();
+    if (checkIfWin()) {
+      announceWinner();
+    } else {
+      switchPlayerTurn();
+    }
 
-    switchPlayerTurn();
+    game.printBoard();
   };
 
   return { playRound };
