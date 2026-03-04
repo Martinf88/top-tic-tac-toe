@@ -35,6 +35,10 @@ function Gameboard() {
     }
   };
 
+  const getBoardValues = () => {
+    return board.flat().map((square) => square.getValue());
+  };
+
   //For testing in the console
   const printBoard = () => {
     const boardWithSquareValues = board.map((row) =>
@@ -44,7 +48,7 @@ function Gameboard() {
     console.log(boardWithSquareValues);
   };
 
-  return { getBoard, placeMarker, printBoard, resetBoard };
+  return { getBoard, placeMarker, printBoard, resetBoard, getBoardValues };
 }
 
 function Square() {
@@ -71,7 +75,6 @@ function Square() {
 
 function GameController() {
   const game = Gameboard();
-  const board = game.getBoard();
 
   let gameOver = false;
 
@@ -93,7 +96,7 @@ function GameController() {
       [2, 4, 6],
     ];
 
-    const boardValues = board.flat().map((square) => square.getValue());
+    const boardValues = game.getBoardValues();
 
     for (const line of winningLines) {
       const [a, b, c] = line;
@@ -110,7 +113,8 @@ function GameController() {
   };
 
   const checkForTie = () => {
-    return board.flat().every((square) => square.getValue() !== null);
+    const boardValues = game.getBoardValues();
+    return boardValues.every((value) => value !== null);
   };
 
   const announceWinner = () => {
@@ -152,5 +156,11 @@ function GameController() {
 
   return { playRound, startNewGame };
 }
+
+// function ScreenController() {
+//   const game = GameController();
+// }
+
+// ScreenController();
 
 const game = GameController();
