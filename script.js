@@ -80,6 +80,11 @@ function GameController() {
 
   const players = ["X", "O"];
   let currentPlayer = players[0];
+  let winner = "";
+
+  const getActivePlayer = () => currentPlayer;
+  const getWinner = () => winner;
+  const getGameState = () => gameOver;
 
   const checkIfWin = () => {
     const winningLines = [
@@ -118,11 +123,11 @@ function GameController() {
   };
 
   const announceWinner = () => {
-    console.log(`Player ${currentPlayer} wins!`);
+    winner = `Player ${currentPlayer} Wins!`;
   };
 
   const announceTie = () => {
-    console.log("It's a tie!");
+    winner = "Draw!";
   };
 
   const switchPlayerTurn = () => {
@@ -154,13 +159,67 @@ function GameController() {
     gameOver = false;
   };
 
-  return { playRound, startNewGame };
+  return {
+    playRound,
+    startNewGame,
+    getBoard: game.getBoard,
+    getActivePlayer,
+    getWinner,
+    getGameState,
+  };
 }
 
-// function ScreenController() {
-//   const game = GameController();
-// }
+function ScreenController() {
+  const game = GameController();
+  const playerTurnDiv = document.querySelector(".turn");
+  const boardDiv = document.querySelector(".board");
 
-// ScreenController();
+  const updateScreen = () => {
+    boardDiv.textContent = "";
 
-const game = GameController();
+    const board = game.getBoard();
+    const activePlayer = game.getActivePlayer();
+
+    if (game.getGameState()) {
+      const winner = game.getWinner();
+      playerTurnDiv.textContent = winner;
+    } else {
+      playerTurnDiv.textContent = `Player ${activePlayer}'s turn.`;
+    }
+
+    board.forEach((row, rowIndex) => {
+      row.forEach((square, colIndex) => {
+        const squareButton = document.createElement("button");
+        squareButton.classList.add("square");
+
+        const index = rowIndex * 3 + colIndex;
+        squareButton.dataset.index = index;
+
+        squareButton.textContent = square.getValue();
+        if (squareButton.textContent === "O") {
+          squareButton.classList.add("marker-o");
+        } else {
+          squareButton.classList.add("marker-x");
+        }
+
+        boardDiv.appendChild(squareButton);
+      });
+    });
+  };
+
+  boardDiv.addEventListener("click", (e) => {
+    const clickedSquare = e.target;
+
+    if (!clickedSquare.classList.contains("square")) return;
+
+    const index = Number(clickedSquare.dataset.index);
+
+    game.playRound(index);
+    updateScreen();
+  });
+
+  // Initial render
+  updateScreen();
+}
+
+ScreenController();

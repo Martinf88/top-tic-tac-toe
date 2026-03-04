@@ -1,0 +1,100 @@
+:root {
+  --primary-color: hsl(9, 100%, 64%);
+  --primary-hover: hsl(9, 100%, 68%);
+  --secondary-color: #333;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+button {
+  color: inherit;
+}
+
+.container {
+  text-align: center;
+}
+
+.turn {
+  height: 2rem;
+  margin-bottom: 4rem;
+  font-weight: 600;
+  font-size: 2.5rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  margin-bottom: 4rem;
+}
+
+.square {
+  background: none;
+  border: none;
+  font-size: 4rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+/* Vertical lines */
+.square:nth-child(2),
+.square:nth-child(5),
+.square:nth-child(8) {
+  border-left: 8px solid var(--secondary-color);
+  border-right: 8px solid var(--secondary-color);
+}
+
+/* Horizontal lines */
+.square:nth-child(4),
+.square:nth-child(5),
+.square:nth-child(6) {
+  border-top: 8px solid var(--secondary-color);
+  border-bottom: 8px solid var(--secondary-color);
+}
+
+.marker-o {
+  color: #ffe4c4;
+}
+
+.square:hover {
+  background: var(--primary-hover);
+}
+
+.new-game {
+  background-color: var(--secondary-color);
+  color: #ffe4c4;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 1rem 3rem;
+  border: none;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+
+.new-game:hover {
+  transform: scale(1.01);
+  cursor: pointer;
+}
