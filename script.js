@@ -73,6 +73,8 @@ function GameController() {
   const game = Gameboard();
   const board = game.getBoard();
 
+  let gameOver = false;
+
   const players = ["X", "O"];
   let currentPlayer = players[0];
 
@@ -124,17 +126,17 @@ function GameController() {
   };
 
   const playRound = (index) => {
+    if (gameOver) return;
+
     const success = game.placeMarker(index, currentPlayer);
     if (!success) return;
 
     if (checkIfWin()) {
       announceWinner();
-      game.resetBoard();
-      currentPlayer = players[0];
+      gameOver = true;
     } else if (checkForTie()) {
       announceTie();
-      game.resetBoard();
-      currentPlayer = players[0];
+      gameOver = true;
     } else {
       switchPlayerTurn();
     }
@@ -142,7 +144,13 @@ function GameController() {
     game.printBoard();
   };
 
-  return { playRound };
+  const startNewGame = () => {
+    game.resetBoard();
+    currentPlayer = players[0];
+    gameOver = false;
+  };
+
+  return { playRound, startNewGame };
 }
 
 const game = GameController();
