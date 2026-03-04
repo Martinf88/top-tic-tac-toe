@@ -107,10 +107,16 @@ function GameController() {
     return false;
   };
 
-  //TODO: Add CheckforTie()
+  const checkForTie = () => {
+    return board.flat().every((square) => square.getValue() !== null);
+  };
 
   const announceWinner = () => {
     console.log(`Player ${currentPlayer} wins!`);
+  };
+
+  const announceTie = () => {
+    console.log("It's a tie!");
   };
 
   const switchPlayerTurn = () => {
@@ -124,6 +130,11 @@ function GameController() {
     if (checkIfWin()) {
       announceWinner();
       game.resetBoard();
+      currentPlayer = players[0];
+    } else if (checkForTie()) {
+      announceTie();
+      game.resetBoard();
+      currentPlayer = players[0];
     } else {
       switchPlayerTurn();
     }
